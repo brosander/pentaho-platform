@@ -51,6 +51,8 @@ public class PentahoSessionDouble extends LoggerDouble implements IPentahoSessio
   private boolean authenticated;
 
   private boolean backgroundExecutionAlert;
+  
+  private volatile boolean isDestoyed;
 
   // ~ Constructors ====================================================================================================
 
@@ -63,12 +65,19 @@ public class PentahoSessionDouble extends LoggerDouble implements IPentahoSessio
     this.actionName = ""; //$NON-NLS-1$
     this.authenticated = false;
     backgroundExecutionAlert = false;
+    isDestoyed = false;
   }
 
   // ~ Methods =========================================================================================================
 
   public void destroy() {
     attributes = null;
+    isDestoyed = true;
+  }
+  
+  @Override
+  public boolean isDestroyed() {
+    return isDestoyed;
   }
 
   public Object getAttribute(final String attributeName) {

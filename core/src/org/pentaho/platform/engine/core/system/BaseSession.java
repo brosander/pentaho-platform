@@ -49,6 +49,8 @@ public abstract class BaseSession extends PentahoBase implements IPentahoSession
   private boolean authenticated;
 
   private volatile boolean backgroundExecutionAlert;
+  
+  private volatile boolean isDestroyed;
 
   public BaseSession(final String name, final String id, final Locale locale) {
     this.name = name;
@@ -57,6 +59,7 @@ public abstract class BaseSession extends PentahoBase implements IPentahoSession
     actionName = ""; //$NON-NLS-1$
     setLogId(Messages.getInstance().getString("BaseSession.CODE_LOG_ID", id, ILogger.SESSION_LOG, name)); //$NON-NLS-1$
     authenticated = false;
+    isDestroyed = false;
   }
 
   public boolean isAuthenticated() {
@@ -91,6 +94,11 @@ public abstract class BaseSession extends PentahoBase implements IPentahoSession
   }
 
   public void destroy() {
+    isDestroyed = true;
+  }
+  
+  public boolean isDestroyed() {
+    return isDestroyed;
   }
 
   public void setActionName(final String actionName) {

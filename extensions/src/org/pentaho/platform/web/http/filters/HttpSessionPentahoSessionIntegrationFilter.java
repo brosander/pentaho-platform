@@ -275,7 +275,7 @@ public class HttpSessionPentahoSessionIntegrationFilter implements Filter, Initi
       // storePentahoSessionInHttpSession() might already be called by the response wrapper
       // if something in the chain called sendError() or sendRedirect(). This ensures we only call it
       // once per request.
-      if (!responseWrapper.isSessionUpdateDone()) {
+      if (!responseWrapper.isSessionUpdateDone() && !pentahoSessionAfterChainExecution.isDestroyed()) {
         storePentahoSessionInHttpSession(pentahoSessionAfterChainExecution, httpRequest,
             httpSessionExistedAtStartOfRequest);
       }
@@ -480,7 +480,9 @@ public class HttpSessionPentahoSessionIntegrationFilter implements Filter, Initi
         return;
       }
       IPentahoSession pentahoSession = PentahoSessionHolder.getSession();
-      storePentahoSessionInHttpSession(pentahoSession, request, httpSessionExistedAtStartOfRequest);
+      if (!pentahoSession.isDestroyed()) {
+        storePentahoSessionInHttpSession(pentahoSession, request, httpSessionExistedAtStartOfRequest);
+      }
       sessionUpdateDone = true;
     }
 

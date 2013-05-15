@@ -77,6 +77,13 @@ public interface IPentahoSession extends ILogger, IAuditable {
    * 
    */
   public void destroy();
+  
+  /**
+   * Returns a boolean indicating whether the session has been destroyed
+   * 
+   * @return a boolean indicating whether the session has been destroyed
+   */
+  public boolean isDestroyed();
 
   /**
    * Get the value of a named session attribute
@@ -112,7 +119,7 @@ public interface IPentahoSession extends ILogger, IAuditable {
    * 
    * @return The enumeration of the attribute names
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   public Iterator getAttributeNames();
 
   /**
