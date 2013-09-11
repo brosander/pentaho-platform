@@ -18,10 +18,8 @@ package org.pentaho.platform.plugin.services.metadata;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -33,6 +31,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -214,20 +213,13 @@ public class PentahoMetadataDomainRepository implements IMetadataDomainRepositor
       
       //Check if this is valid xml
       InputStream inputStream2 = null;
-      String xmi = null;
       try {
         //first, convert our input stream to a string
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        StringBuilder stringBuilder = new StringBuilder();
-        while ((xmi = reader.readLine()) != null) {
-          stringBuilder.append(xmi);
-        }
-        inputStream.close();
-        xmi = stringBuilder.toString();
+        String xmiString = IOUtils.toString(inputStream);
         //now, try to see if the xmi can be parsed (ie, check if it's valid xmi)
-        Domain domain = xmiParser.parseXmi(new java.io.ByteArrayInputStream(xmi.getBytes()));
+        Domain domain = xmiParser.parseXmi(new java.io.ByteArrayInputStream(xmiString.getBytes()));
         //xmi is valid. Create a new inputstream for the actual import action.
-        inputStream2 = new java.io.ByteArrayInputStream(xmi.getBytes());
+        inputStream2 = new java.io.ByteArrayInputStream(xmiString.getBytes());
       }
       catch (Exception ex){
         logger.error(ex.getMessage());
